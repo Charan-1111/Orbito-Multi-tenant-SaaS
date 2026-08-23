@@ -32,3 +32,9 @@ func (db *DataBaseStore) InitializeDatabaseStore(ctx context.Context, database *
 
 	return err
 }
+
+func (db *DataBaseStore) Close() {
+	if db.Db != nil {
+		db.Db.Close()
+	}
+}
