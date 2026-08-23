@@ -1,0 +1,13 @@
+{
+    "environment" : "local",
+    "server" : {
+        "port" : ":8000"
+    },
+    "database" : {
+        "username" : "root",
+        "password" : "my-local-pw",
+        "host" : "localhost",
+        "port" : "5432",
+        "databaseName" : "task_manager"
+    }
+}
