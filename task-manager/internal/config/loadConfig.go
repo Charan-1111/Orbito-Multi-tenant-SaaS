@@ -4,6 +4,7 @@ import (
 	"os"
 	"sync"
 	"task-manager/models"
+	"task-manager/internal/store/database"
 
 	"github.com/bytedance/sonic"
 )
@@ -11,6 +12,7 @@ import (
 type Configuration struct {
 	Environment string        `json:"environment"`
 	Server      models.Server `json:"server"`
+	Database *database.Database `json:"database"`
 	once        sync.Once
 }
 
