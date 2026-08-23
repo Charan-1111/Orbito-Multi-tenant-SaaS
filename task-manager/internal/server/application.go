@@ -2,16 +2,23 @@ package server
 
 import (
 	"context"
+	"os"
+	"sync"
 	"task-manager/internal/config"
 	"task-manager/internal/logging"
 	"task-manager/internal/store/database"
 	repository "task-manager/internal/store/storeRepo"
+	"time"
+
+	"github.com/gofiber/fiber/v3"
 )
 
 type Application struct {
 	config *config.Configuration
 	log    *logging.Log
 	db     repository.Repository
+	server *fiber.App
+	once   sync.Once
 }
 
 func NewApplication() (*Application, error) {
@@ -38,10 +45,39 @@ func NewApplication() (*Application, error) {
 	}, nil
 }
 
-func (app *Application) StartApplication() error {
-	appServer := app.SetUpRoutes()
+func (app *Application) StartApplication(shutdown <-chan os.Signal) error {
+	app.server = app.SetUpRoutes()
+	serverErrors := make(chan error, 1)
 
-	err := appServer.Listen(app.config.Server.Port)
+	go func() {
+		serverErrors <- app.server.Listen(app.config.Server.Port)
+	}()
 
-	return err
+	select {
+	case err := <-serverErrors:
+		app.closeResources()
+		return err
+	case <-shutdown:
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+
+		shutdownErr := app.server.ShutdownWithContext(ctx)
+		listenErr := <-serverErrors
+		app.closeResources()
+		if shutdownErr != nil {
+			return shutdownErr
+		}
+		return listenErr
+	}
+}
+
+func (app *Application) closeResources() {
+	app.once.Do(func() {
+		if app.db != nil {
+			app.db.Close()
+		}
+		if app.log != nil {
+			app.log.Close()
+		}
+	})
 }
