@@ -1,12 +1,11 @@
 package server
 
 import (
-	"fmt"
 	"task-manager/internal/config"
 )
 
 type Application struct {
-	config *config .Configuration
+	config *config.Configuration
 }
 
 func NewApplication() (*Application, error) {
@@ -22,6 +21,9 @@ func NewApplication() (*Application, error) {
 }
 
 func (app *Application) StartApplication() error {
-	fmt.Println(app.config)
-	return nil
+	appServer := app.SetUpRoutes()
+
+	err := appServer.Listen(app.config.Server.Port)
+
+	return err
 }

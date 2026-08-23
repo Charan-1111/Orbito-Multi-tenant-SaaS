@@ -1,0 +1,25 @@
+Request
+   │
+   ▼
+RequestID Middleware
+   │
+   ▼
+Logging Middleware
+   │
+   ▼
+Auth Middleware
+   │
+   ▼
+GetUsers Handler
+   │
+   ▼
+Auth Middleware
+   │
+   ▼
+Logging Middleware
+   │
+   ▼
+RequestID Middleware
+   │
+   ▼
+Response
