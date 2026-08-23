@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"errors"
 	"sync"
 
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -23,6 +24,10 @@ type DataBaseStore struct {
 }
 
 func (db *DataBaseStore) InitializeDatabaseStore(ctx context.Context, database *Database) error {
+	if database == nil {
+		return errors.New("database configuration is required")
+	}
+
 	var err error
 
 	db.once.Do(func() {

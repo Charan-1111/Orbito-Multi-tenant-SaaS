@@ -1,19 +1,17 @@
 package middlewares
 
 import (
-	"fmt"
-
 	"github.com/gofiber/fiber/v3"
+	"github.com/google/uuid"
 )
 
 func RequestId(c fiber.Ctx) error {
-	requestId := c.Get("X-Request-Id")
-
-	fmt.Println("Request ID:", requestId)
-
-	if requestId == "" {
-		c.Set("X-Request-Id", c.Locals("requestid").(string))
+	requestID := c.Get("X-Request-Id")
+	if requestID == "" {
+		requestID = uuid.NewString()
 	}
+	c.Set("X-Request-Id", requestID)
+	c.Locals("requestid", requestID)
 
 	return c.Next()
 }

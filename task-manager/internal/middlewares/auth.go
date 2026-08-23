@@ -7,11 +7,13 @@ import (
 )
 
 func Authenticate(c fiber.Ctx) error {
-	authToken := c.Get("Authorization")
+	authHeader := strings.TrimSpace(c.Get("Authorization"))
+	parts := strings.Fields(authHeader)
+	if len(parts) != 2 || !strings.EqualFold(parts[0], "Bearer") || parts[1] == "" {
+		return fiber.ErrUnauthorized
+	}
 
-	authToken = strings.Split(authToken, " ")[1]
-
-	c.Set("token", authToken)
+	c.Locals("token", parts[1])
 
 	return c.Next()
 }
