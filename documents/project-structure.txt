@@ -1,0 +1,20 @@
+task-manager/
+├── cmd/
+│   └── api/
+│       └── main.go
+├── internal/
+│   ├── config/
+│   ├── server/
+│   ├── domain/
+│   │   ├── task.go
+│   │   └── tenant.go
+│   ├── task/
+│   │   ├── handler.go
+│   │   ├── service.go
+│   │   └── repository.go
+│   └── database/
+├── configs/
+│   └── local/
+├── migrations/
+├── tests/
+└── go.mod

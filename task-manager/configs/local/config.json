@@ -1,0 +1,6 @@
+{
+    "environment" : "local",
+    "server" : {
+        "port" : ":8000"
+    }
+}
