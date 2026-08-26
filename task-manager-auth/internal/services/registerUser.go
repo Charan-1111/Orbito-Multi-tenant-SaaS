@@ -13,12 +13,18 @@ func (s *Service) RegisterUser(ctx context.Context, requestId, details string) e
 		return fmt.Errorf("Decoding the user details failed: %w", err)
 	}
 
-	user := strings.Split(strings.TrimSpace(userDetails), " ")
+	user := strings.Split(strings.TrimSpace(userDetails), ":")
 	username := user[0]
 	passWord := user[1]
 
-	fmt.Println("Request ID:", requestId)
-	fmt.Println("Username:", username)
-	fmt.Println("Password:", passWord)
+	hashedPassword, err := utils.HashPassword(passWord)
+	if err != nil {
+		return fmt.Errorf("Hashing the password : %w", err)
+	}
+
+	fmt.Println(username,  " ", hashedPassword)
+
+	// now should we store the username and password in the databaseb ?
+	
 	return nil
 }

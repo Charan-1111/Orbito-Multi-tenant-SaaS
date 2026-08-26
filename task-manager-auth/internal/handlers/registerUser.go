@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/gofiber/fiber/v3"
@@ -10,8 +9,6 @@ import (
 func (cfg *ConfigHandler) RegisterUser(c fiber.Ctx) error {
 
 	auth := strings.TrimSpace(c.Get("Authorization"))
-
-	fmt.Println(auth)
 
 	requestId := c.Locals("requestId")
 
