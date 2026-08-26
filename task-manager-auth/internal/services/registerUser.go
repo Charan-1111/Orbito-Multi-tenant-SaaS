@@ -24,7 +24,9 @@ func (s *Service) RegisterUser(ctx context.Context, requestId, details string) e
 
 	fmt.Println(username,  " ", hashedPassword)
 
-	// now should we store the username and password in the databaseb ?
+	// now should we store the username and password in the database..
+
 	
+
 	return nil
 }
