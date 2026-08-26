@@ -10,8 +10,9 @@ func RequestId(c fiber.Ctx) error {
 	if requestID == "" {
 		requestID = uuid.NewString()
 	}
+
 	c.Set("X-Request-Id", requestID)
-	c.Locals("requestid", requestID)
+	c.Locals("requestId", requestID)
 
 	return c.Next()
 }

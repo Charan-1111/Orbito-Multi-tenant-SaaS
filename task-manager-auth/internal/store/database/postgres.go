@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"errors"
+	"fmt"
 	"sync"
 
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -33,9 +34,12 @@ func (db *DataBaseStore) InitializeDatabaseStore(ctx context.Context, database *
 	db.once.Do(func() {
 		dsn := "postgres://" + database.Username + ":" + database.Password + "@" + database.Host + ":" + database.Port + "/" + database.DatabaseName
 		db.Db, err = pgxpool.New(ctx, dsn)
+		if err != nil {
+			return
+		}
 	})
 
-	return err
+	return fmt.Errorf("Error while initializing the database connection pool : %w", err)
 }
 
 func (db *DataBaseStore) Close() {
