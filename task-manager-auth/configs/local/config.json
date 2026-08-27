@@ -4,10 +4,18 @@
         "port" : ":8000"
     },
     "database" : {
-        "username" : "root",
-        "password" : "my-local-pw",
+        "username" : "admin",
+        "password" : "admin123",
         "host" : "localhost",
         "port" : "5432",
         "databaseName" : "task_manager"
+    },
+    "queries" : {
+        "create" : {
+            "taskManagerAuth" : "CREATE TABLE IF NOT EXISTS taskManagerAuth (email VARCHAR(100) PRIMARY KEY, password TEXT NOT NULL)"
+        },
+        "insert" : {
+            "registerUser" : "INSERT INTO taskManagerAuth (email, password) VALUES ($1, $2)"
+        }
     }
 }

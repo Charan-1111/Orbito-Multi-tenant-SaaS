@@ -3,8 +3,8 @@ package config
 import (
 	"os"
 	"sync"
+	"task-manager-auth/internal/models"
 	"task-manager-auth/internal/store/database"
-	"task-manager-auth/models"
 
 	"github.com/bytedance/sonic"
 )
@@ -13,6 +13,7 @@ type Configuration struct {
 	Environment string             `json:"environment"`
 	Server      models.Server      `json:"server"`
 	Database    *database.Database `json:"database"`
+	Queries     models.Queries     `json:"queries"`
 	once        sync.Once
 }
 
