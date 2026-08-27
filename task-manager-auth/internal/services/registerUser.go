@@ -22,11 +22,10 @@ func (s *Service) RegisterUser(ctx context.Context, requestId, details string) e
 		return fmt.Errorf("Hashing the password : %w", err)
 	}
 
-	fmt.Println(username,  " ", hashedPassword)
-
-	// now should we store the username and password in the database..
-
-	
+	err = s.database.RegisterUser(ctx, username, hashedPassword)
+	if err != nil {
+		return fmt.Errorf("Registering User : w", err)
+	}
 
 	return nil
 }

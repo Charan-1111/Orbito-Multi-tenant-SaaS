@@ -21,5 +21,5 @@ func (cfg *ConfigHandler) RegisterUser(c fiber.Ctx) error {
 		})
 	}
 
-	return nil
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"code": 0, "message": "User registered succeessfulluy"})
 }

@@ -7,7 +7,6 @@ import (
 	"task-manager-auth/internal/config"
 	"task-manager-auth/internal/logging"
 	"task-manager-auth/internal/store/database"
-	repository "task-manager-auth/internal/store/storeRepo"
 	"time"
 
 	"github.com/gofiber/fiber/v3"
@@ -16,7 +15,7 @@ import (
 type Application struct {
 	config *config.Configuration
 	log    *logging.Log
-	db     repository.Repository
+	db     database.Repository
 	server *fiber.App
 	once   sync.Once
 }
@@ -33,7 +32,8 @@ func NewApplication() (*Application, error) {
 	}
 
 	databaseStore := &database.DataBaseStore{}
-	err = databaseStore.InitializeDatabaseStore(context.Background(), config.Database)
+	databaseStore.Log = log
+	err = databaseStore.InitializeDatabaseStore(context.Background(), config.Database, config.Queries)
 	if err != nil {
 		return nil, err
 	}
@@ -46,6 +46,7 @@ func NewApplication() (*Application, error) {
 }
 
 func (app *Application) StartApplication(shutdown <-chan os.Signal) error {
+	app.PerformNecessaryOperations()
 	app.server = app.SetUpRoutes()
 	serverErrors := make(chan error, 1)
 
@@ -68,6 +69,13 @@ func (app *Application) StartApplication(shutdown <-chan os.Signal) error {
 			return shutdownErr
 		}
 		return listenErr
+	}
+}
+
+func (app *Application) PerformNecessaryOperations() {
+	err := app.db.CreateTables(context.Background())
+	if err != nil {
+		app.log.Log.Error().Err(err).Msg("Error initializing the tables")
 	}
 }
 

@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"sync"
+	"task-manager-auth/internal/logging"
+	"task-manager-auth/internal/models"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -20,14 +22,18 @@ type Database struct {
 }
 
 type DataBaseStore struct {
-	Db   *pgxpool.Pool
-	once sync.Once
+	Db      *pgxpool.Pool
+	Queries models.Queries
+	Log     *logging.Log
+	once    sync.Once
 }
 
-func (db *DataBaseStore) InitializeDatabaseStore(ctx context.Context, database *Database) error {
+func (db *DataBaseStore) InitializeDatabaseStore(ctx context.Context, database *Database, queries models.Queries) error {
 	if database == nil {
 		return errors.New("database configuration is required")
 	}
+
+	db.Queries = queries
 
 	var err error
 
@@ -39,7 +45,15 @@ func (db *DataBaseStore) InitializeDatabaseStore(ctx context.Context, database *
 		}
 	})
 
-	return fmt.Errorf("Error while initializing the database connection pool : %w", err)
+	if err != nil {
+		return fmt.Errorf("Error initializing database connection pool : %w", err)
+	}
+
+	return nil
+}
+
+func (db *DataBaseStore) PingDb(ctx context.Context) error {
+	return db.Db.Ping(ctx)
 }
 
 func (db *DataBaseStore) Close() {

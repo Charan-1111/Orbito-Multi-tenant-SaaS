@@ -8,21 +8,21 @@ import (
 )
 
 type Log struct {
-	log   zerolog.Logger
-	close func()
+	Log   zerolog.Logger
+	Close func()
 	once  sync.Once
 }
 
 func (log *Log) Initialize() {
 	log.once = sync.Once{}
-	log.log = zerolog.New(zerolog.ConsoleWriter{Out: os.Stdout}).With().Timestamp().Logger()
-	log.close = func() {}
+	log.Log = zerolog.New(zerolog.ConsoleWriter{Out: os.Stdout}).With().Timestamp().Logger()
+	log.Close = func() {}
 }
 
-func (log *Log) Close() {
+func (log *Log) CloseFunc() {
 	log.once.Do(func() {
-		if log.close != nil {
-			log.close()
+		if log.Close != nil {
+			log.Close()
 		}
 	})
 }
