@@ -40,13 +40,8 @@ func (s *Service) UserLogin(ctx context.Context, requestId, details string) erro
 	username := user[0]
 	passWord := user[1]
 
-	hashedPassword, err := utils.HashPassword(passWord)
-	if err != nil {
-		return fmt.Errorf("Hashing the password : %w", err)
-	}
-
-	userCnt, err := s.database.CheckUserExistance(ctx, username, hashedPassword)
-	if err != nil || userCnt == 0 {
+	passwordHash, err := s.database.CheckUserExistance(ctx, username)
+	if err != nil || utils.VerifyPassword(passWord, passwordHash) != nil {
 		return fmt.Errorf("Invalid Credentials")
 	}
 

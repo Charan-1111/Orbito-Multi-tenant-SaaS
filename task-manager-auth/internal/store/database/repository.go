@@ -9,7 +9,7 @@ type Repository interface {
 	Close()
 	CreateTables(ctx context.Context) error
 	RegisterUser(ctx context.Context, username, password string) error
-	CheckUserExistance(ctx context.Context, username, passsword string) (int, error)
+	CheckUserExistance(ctx context.Context, username string) (string, error)
 }
 
 func (db *DataBaseStore) CreateTables(ctx context.Context) error {
@@ -34,13 +34,13 @@ func (db *DataBaseStore) RegisterUser(ctx context.Context, username, password st
 	return nil
 }
 
-func (db *DataBaseStore) CheckUserExistance(ctx context.Context, username, password string) (int, error) {
-	var userCnt int
+func (db *DataBaseStore) CheckUserExistance(ctx context.Context, username string) (string, error) {
+	var passwordHash string
 
-	err := db.Db.QueryRow(ctx, db.Queries.Fetch.CheckUserExistance, username, password).Scan(&userCnt)
+	err := db.Db.QueryRow(ctx, db.Queries.Fetch.CheckUserExistance, username).Scan(&passwordHash)
 	if err != nil {
-		return 0, err
+		return "", err
 	}
 
-	return userCnt, nil
+	return passwordHash, nil
 }
