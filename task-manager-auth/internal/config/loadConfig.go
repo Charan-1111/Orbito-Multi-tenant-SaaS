@@ -14,6 +14,7 @@ type Configuration struct {
 	Server      models.Server      `json:"server"`
 	Database    *database.Database `json:"database"`
 	Queries     models.Queries     `json:"queries"`
+	Jwt         models.Jwt         `json:"jwt"`
 	once        sync.Once
 }
 

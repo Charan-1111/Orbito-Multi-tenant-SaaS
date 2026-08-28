@@ -5,19 +5,22 @@ import (
 	"os"
 	"sync"
 	"task-manager-auth/internal/config"
+	"task-manager-auth/internal/constants"
 	"task-manager-auth/internal/logging"
 	"task-manager-auth/internal/store/database"
+	"task-manager-auth/internal/token"
 	"time"
 
 	"github.com/gofiber/fiber/v3"
 )
 
 type Application struct {
-	config *config.Configuration
-	log    *logging.Log
-	db     database.Repository
-	server *fiber.App
-	once   sync.Once
+	config       *config.Configuration
+	log          *logging.Log
+	db           database.Repository
+	server       *fiber.App
+	tokenService *token.TokenService
+	once         sync.Once
 }
 
 func NewApplication() (*Application, error) {
@@ -38,10 +41,21 @@ func NewApplication() (*Application, error) {
 		return nil, err
 	}
 
+	secret := os.Getenv("JWT_SECRET")
+	if secret == "" {
+		secret = config.Jwt.Secret
+	}
+
+	tokenService, err := token.NewTokenService(secret, constants.TokenIssuer)
+	if err != nil {
+		return nil, err
+	}
+
 	return &Application{
-		config: config,
-		log:    log,
-		db:     databaseStore,
+		config:       config,
+		log:          log,
+		db:           databaseStore,
+		tokenService: tokenService,
 	}, nil
 }
 

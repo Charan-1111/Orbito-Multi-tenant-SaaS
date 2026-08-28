@@ -14,7 +14,7 @@ func (app *Application) SetUpRoutes() *fiber.App {
 
 	// pre-handler information
 	configHandler := handlers.NewConfigHandler(app.config, app.log, app.db)
-	configHandler.Service = services.NewService(app.config, app.log, app.db)
+	configHandler.Service = services.NewService(app.config, app.log, app.db, app.tokenService)
 
 	// appServer.Use(recover.New())
 	appServer.Use(cors.New())

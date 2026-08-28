@@ -1,4 +1,6 @@
 # Local configuration and secrets
+configs/
+**/configs/
 **/configs/local/config.json
 .env
 .env.*

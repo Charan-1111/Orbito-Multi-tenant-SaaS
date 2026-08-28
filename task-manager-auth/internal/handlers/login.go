@@ -11,16 +11,20 @@ func (h *ConfigHandler) UserLogin(c fiber.Ctx) error {
 
 	requestId := c.Locals("requestId").(string)
 
-	err := h.Service.UserLogin(c.Context(), requestId, auth)
+	accessToken, refreshToken, err := h.Service.UserLogin(c.Context(), requestId, auth)
 	if err != nil {
-		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"message" : err.Error()})
+		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"message": err.Error()})
 	}
-	
+
 	/*
 		TODO:
 		After successful login, we need to generate J-Tokens, so that the subsequent api calls
 		will use those tokens for the validation
 	*/
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message" : "Login Successfull"})
+	// injecting the tokens into response headers
+	c.Set("X-Access-Token", accessToken)
+	c.Set("X-Refresh-Token", refreshToken)
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Login Successfull"})
 }
