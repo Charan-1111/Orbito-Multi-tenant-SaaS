@@ -16,6 +16,9 @@
         },
         "insert" : {
             "registerUser" : "INSERT INTO taskManagerAuth (email, password) VALUES ($1, $2)"
+        },
+        "fetch" : {
+            "checkUserExistance" : "SELECT COUNT(1) FROM taskManagerAuth WHERE email = $1 AND password = $2"
         }
     }
 }

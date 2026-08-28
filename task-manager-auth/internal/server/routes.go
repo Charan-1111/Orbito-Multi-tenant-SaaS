@@ -23,6 +23,7 @@ func (app *Application) SetUpRoutes() *fiber.App {
 	apiRoutes.Use(middlewares.RequestId)
 
 	apiRoutes.Post("/register", configHandler.RegisterUser)
+	apiRoutes.Post("/login", configHandler.UserLogin)
 
 	apiRoutes.Use(middlewares.Authenticate)
 
@@ -35,11 +36,3 @@ func (app *Application) SetUpRoutes() *fiber.App {
 	})
 	return appServer
 }
-
-// curl --request POST \
-//   --url http://localhost:8000/auth/v1/register \
-//   --header 'Accept: */*' \
-//   --header 'Accept-Encoding: gzip, deflate, br' \
-//   --header 'Authorization: Basic Y2hhcmFuOnBhc3N3b3Jk' \
-//   --header 'Connection: keep-alive' \
-//   --header 'User-Agent: EchoapiRuntime/1.1.0'
