@@ -15,5 +15,7 @@ func Authenticate(c fiber.Ctx) error {
 
 	c.Locals("token", parts[1])
 
+	// TODO : we need to implemet the validate logic here
+
 	return c.Next()
 }

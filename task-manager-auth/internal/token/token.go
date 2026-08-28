@@ -1,6 +1,7 @@
 package token
 
 import (
+	"fmt"
 	"task-manager-auth/internal/constants"
 	"time"
 
@@ -72,4 +73,35 @@ func (t *TokenService) GenerateTokens(userId string, accessExpiry, refreshExpiry
 	return accessToken, refreshToken, nil
 }
 
-// TODO : Token validation and parsing logic needs to be implemented below
+func (t *TokenService) ValidateToken(tokenString string) (*Claims, error) {
+	claims := &Claims{}
+
+	token, err := jwt.ParseWithClaims(
+		tokenString,
+		claims,
+		func(token *jwt.Token) (any, error) {
+			if token.Method != jwt.SigningMethodHS256 {
+				return nil, fmt.Errorf(
+					"%w : unexpected signing method %s",
+					constants.ErrInvalidToken,
+					token.Method.Alg(),
+				)
+			}
+
+			return t.secret, nil
+		},
+		jwt.WithValidMethods([]string{jwt.SigningMethodHS256.Alg()}),
+		jwt.WithIssuer(t.issuer),
+		jwt.WithAudience("my-api"),
+	)
+
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", constants.ErrInvalidToken, err)
+	}
+
+	if !token.Valid {
+		return nil, constants.ErrInvalidToken
+	}
+
+	return claims, nil
+}
