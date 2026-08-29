@@ -4,17 +4,15 @@ import (
 	"os"
 	"sync"
 	"task-manager-auth/internal/models"
-	"task-manager-auth/internal/store/database"
 
 	"github.com/bytedance/sonic"
 )
 
 type Configuration struct {
-	Environment string             `json:"environment"`
-	Server      models.Server      `json:"server"`
-	Database    *database.Database `json:"database"`
-	Queries     models.Queries     `json:"queries"`
-	Jwt         models.Jwt         `json:"jwt"`
+	Environment string         `json:"environment"`
+	Server      models.Server  `json:"server"`
+	Queries     models.Queries `json:"queries"`
+	Jwt         models.Jwt     `json:"jwt"`
 	once        sync.Once
 }
 

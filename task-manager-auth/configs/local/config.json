@@ -1,0 +1,21 @@
+{
+    "environment" : "local",
+    "server" : {
+        "port" : ":8000"
+    },
+    "queries" : {
+        "create" : {
+            "taskManagerAuth" : "CREATE TABLE IF NOT EXISTS taskManagerAuth (email VARCHAR(100) PRIMARY KEY, password TEXT NOT NULL)"
+        },
+        "insert" : {
+            "registerUser" : "INSERT INTO taskManagerAuth (email, password) VALUES ($1, $2)"
+        },
+        "fetch" : {
+            "checkUserExistance" : "SELECT password FROM taskManagerAuth WHERE email = $1"
+        }
+    },
+    "jwt" : {
+        "accessExpiryInMinutes" : 15,
+        "refreshExpiryInMinutes" : 1440
+    }
+}

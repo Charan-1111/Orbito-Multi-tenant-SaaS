@@ -8,7 +8,7 @@ import (
 
 func TestInitializeDatabaseStoreRequiresConfiguration(t *testing.T) {
 	store := &DataBaseStore{}
-	if err := store.InitializeDatabaseStore(context.Background(), nil, models.Queries{}); err == nil {
+	if err := store.InitializeDatabaseStore(context.Background(), models.Queries{}); err == nil {
 		t.Fatal("expected an error for nil database configuration")
 	}
 }

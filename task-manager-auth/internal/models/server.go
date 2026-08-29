@@ -5,7 +5,6 @@ type Server struct {
 }
 
 type Jwt struct {
-	Secret                 string `json:"secret"`
-	AccessExpiryInMinutes  int    `json:"accessExpiryInMinutes"`
-	RefreshExpiryInMinutes int    `json:"refreshExpiryInMinutes"`
+	AccessExpiryInMinutes  int `json:"accessExpiryInMinutes"`
+	RefreshExpiryInMinutes int `json:"refreshExpiryInMinutes"`
 }

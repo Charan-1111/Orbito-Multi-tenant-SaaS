@@ -2,24 +2,14 @@ package database
 
 import (
 	"context"
-	"errors"
 	"fmt"
+	"os"
 	"sync"
 	"task-manager-auth/internal/logging"
 	"task-manager-auth/internal/models"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
-
-type Database struct {
-	// these are the sensitive information
-	// get them from somewhere else for now we can keep them here
-	Username     string `json:"username"`
-	Password     string `json:"password"`
-	Host         string `json:"host"`
-	Port         string `json:"port"`
-	DatabaseName string `json:"databaseName"`
-}
 
 type DataBaseStore struct {
 	Db      *pgxpool.Pool
@@ -28,17 +18,19 @@ type DataBaseStore struct {
 	once    sync.Once
 }
 
-func (db *DataBaseStore) InitializeDatabaseStore(ctx context.Context, database *Database, queries models.Queries) error {
-	if database == nil {
-		return errors.New("database configuration is required")
-	}
+func (db *DataBaseStore) InitializeDatabaseStore(ctx context.Context, queries models.Queries) error {
+	username := os.Getenv("DB_USERNAME")
+	password := os.Getenv("DB_PASSWORD")
+	host := os.Getenv("DB_HOST")
+	port := os.Getenv("DB_PORT")
+	dbName := os.Getenv("DB_NAME")
 
 	db.Queries = queries
 
 	var err error
 
 	db.once.Do(func() {
-		dsn := "postgres://" + database.Username + ":" + database.Password + "@" + database.Host + ":" + database.Port + "/" + database.DatabaseName
+		dsn := "postgres://" + username + ":" + password + "@" + host + ":" + port + "/" + dbName
 		db.Db, err = pgxpool.New(ctx, dsn)
 		if err != nil {
 			return

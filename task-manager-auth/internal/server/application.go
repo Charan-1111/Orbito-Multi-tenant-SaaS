@@ -36,14 +36,14 @@ func NewApplication() (*Application, error) {
 
 	databaseStore := &database.DataBaseStore{}
 	databaseStore.Log = log
-	err = databaseStore.InitializeDatabaseStore(context.Background(), config.Database, config.Queries)
+	err = databaseStore.InitializeDatabaseStore(context.Background(), config.Queries)
 	if err != nil {
 		return nil, err
 	}
 
 	secret := os.Getenv("JWT_SECRET")
 	if secret == "" {
-		secret = config.Jwt.Secret
+		return nil, constants.ErrMissingJwtSecret
 	}
 
 	tokenService, err := token.NewTokenService(secret, constants.TokenIssuer)
