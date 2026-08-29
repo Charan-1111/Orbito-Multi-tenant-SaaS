@@ -28,7 +28,7 @@ func (db *DataBaseStore) CreateTables(ctx context.Context) error {
 func (db *DataBaseStore) RegisterUser(ctx context.Context, username, password string) error {
 	_, err := db.Db.Exec(ctx, db.Queries.Insert.RegisterUser, username, password)
 	if err != nil {
-		return fmt.Errorf("Error while registering the user : w", err)
+		return fmt.Errorf("Error while registering the user: %w", err)
 	}
 
 	return nil
