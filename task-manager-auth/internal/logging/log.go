@@ -19,6 +19,16 @@ func (log *Log) Initialize() {
 	log.Close = func() {}
 }
 
+func (log *Log) WithRequestID(requestID string) zerolog.Logger {
+	if log == nil {
+		return zerolog.Nop()
+	}
+	if requestID == "" {
+		return log.Log
+	}
+	return log.Log.With().Str("requestId", requestID).Logger()
+}
+
 func (log *Log) CloseFunc() {
 	log.once.Do(func() {
 		if log.Close != nil {
