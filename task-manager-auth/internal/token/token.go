@@ -9,9 +9,15 @@ import (
 	"github.com/google/uuid"
 )
 
+const (
+	TokenTypeAccess  = "access"
+	TokenTypeRefresh = "refresh"
+)
+
 type Claims struct {
-	UserId string `json:"userId"`
-	Email  string `json:"email"`
+	UserId    string `json:"userId"`
+	Email     string `json:"email"`
+	TokenType string `json:"tokenType"`
 
 	jwt.RegisteredClaims
 }
@@ -32,11 +38,12 @@ func NewTokenService(secret, issuer string) (*TokenService, error) {
 	}, nil
 }
 
-func (t *TokenService) GenerateToken(userId string, expiry int) (string, error) {
+func (t *TokenService) GenerateToken(userId, tokenType string, expiry int) (string, error) {
 	now := time.Now()
 	claims := Claims{
-		UserId: userId,
-		Email:  userId,
+		UserId:    userId,
+		Email:     userId,
+		TokenType: tokenType,
 		RegisteredClaims: jwt.RegisteredClaims{
 			Issuer:    t.issuer,
 			Subject:   userId,
@@ -61,12 +68,12 @@ func (t *TokenService) GenerateToken(userId string, expiry int) (string, error) 
 }
 
 func (t *TokenService) GenerateTokens(userId string, accessExpiry, refreshExpiry int) (string, string, error) {
-	accessToken, err := t.GenerateToken(userId, accessExpiry)
+	accessToken, err := t.GenerateToken(userId, TokenTypeAccess, accessExpiry)
 	if err != nil {
 		return "", "", err
 	}
 
-	refreshToken, err := t.GenerateToken(userId, refreshExpiry)
+	refreshToken, err := t.GenerateToken(userId, TokenTypeRefresh, refreshExpiry)
 	if err != nil {
 		return "", "", err
 	}

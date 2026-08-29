@@ -24,8 +24,9 @@ func (app *Application) SetUpRoutes() *fiber.App {
 
 	apiRoutes.Post("/register", configHandler.RegisterUser)
 	apiRoutes.Post("/login", configHandler.UserLogin)
-
-	apiRoutes.Use(middlewares.Authenticate)
+	apiRoutes.Get("/validate", configHandler.ValidateToken)
+	apiRoutes.Get("/token/rotate", configHandler.RotateToken)
+	
 
 	appServer.Get("/health", func(c fiber.Ctx) error {
 		return c.SendString("OK")
